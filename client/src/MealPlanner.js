@@ -14,7 +14,7 @@ const MealPlanner = () => {
  const handleSubmit = async () => {
   setLoading(true);
   try {
-    const res = await fetch("http://localhost:5002/api/mealplan", {
+    const res = await fetch("https://mealplanner-api-yljs.onrender.com", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
