@@ -7,90 +7,79 @@ dotenv.config();
 
 const app = express();
 
-// ✅ FIX: Update CORS to allow requests from your frontend
+// ✅ CORS: Allow your frontend to access the backend
 app.use(
   cors({
-    origin: "*", // Temporary: Allow all origins
+    origin: ["https://mealplanner-silk.vercel.app", "https://mealplanner-git-main-merimas-projects.vercel.app"],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
 );
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // ✅ Fix form submission issues
 
+// ✅ Health Check Route
 app.get("/", (req, res) => {
   res.send("Meal Planner API is running!");
 });
 
-// ✅ Ensure this is properly set for your API route
+// ✅ Fix API Route (Ensure `async` is used correctly)
 app.post("/api/mealplan", async (req, res) => {
-    const { diet, allergies, mealTypes, cookingTime, ingredients } = req.body;
+  const { diet, allergies, mealTypes, cookingTime, ingredients } = req.body;
 
-    try {
-        const gptResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-            },
-            body: JSON.stringify({
-                model: "gpt-4o",
-                messages: [
-                    {
-                        role: "system",
-                        content:
-                            "You are a meal planning assistant. Generate a structured weekly meal plan along with a separate grocery list."
-                    },
-                    {
-                        role: "user",
-                        content: `Diet: ${diet}, Allergies: ${allergies}, Meal Types: ${mealTypes}, Cooking Time: ${cookingTime}, Ingredients: ${ingredients}.`
-                    },
-                ],
-                max_tokens: 700,
-            }),
-        });
+  try {
+    const gptResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: "You are a meal planning assistant. Generate a structured weekly meal plan with a separate grocery list." },
+          { role: "user", content: `Diet: ${diet}, Allergies: ${allergies}, Meal Types: ${mealTypes}, Cooking Time: ${cookingTime}, Ingredients: ${ingredients}.` },
+        ],
+        max_tokens: 700,
+      }),
+    });
 
-        const gptData = await gptResponse.json();
+    const gptData = await gptResponse.json();
 
-        if (gptData.error) {
-    console.error("OpenAI Error:", gptData.error);
-    res.status(500).json({ reply: `OpenAI Error: ${gptData.error.message}` });
-    return;  // ✅ Ensure return is inside this block
-}
-
-        if (!gptData.choices || gptData.choices.length === 0) {
-            console.error("Unexpected OpenAI Response:", gptData);
-            res.status(500).json({ reply: "Error: OpenAI returned an unexpected response." });
-            return;
-        }
-
-        const rawText = gptData.choices[0].message.content;
-        console.log("Raw OpenAI Response:", rawText);
-
-        const mealPlanIndex = rawText.indexOf("### Meal Plan");
-        const groceryListIndex = rawText.indexOf("### Grocery List");
-
-        let mealPlanText = "Meal plan not found.";
-        let groceryListText = "Grocery list not found.";
-
-        if (mealPlanIndex !== -1 && groceryListIndex !== -1) {
-            mealPlanText = rawText.substring(mealPlanIndex, groceryListIndex).trim();
-            groceryListText = rawText.substring(groceryListIndex).replace("### Grocery List", "").trim();
-        } else {
-            console.error("Error: Could not properly separate meal plan and grocery list.");
-        }
-
-        res.json({
-            mealPlan: mealPlanText,
-            groceryList: groceryListText,
-        });
-
-    } catch (error) {
-        console.error("Server Error:", error);
-        res.status(500).json({ reply: "Server error: Unable to process request." });
+    if (gptData.error) {
+      console.error("OpenAI Error:", gptData.error);
+      return res.status(500).json({ reply: `OpenAI Error: ${gptData.error.message}` });
     }
+
+    if (!gptData.choices || gptData.choices.length === 0) {
+      console.error("Unexpected OpenAI Response:", gptData);
+      return res.status(500).json({ reply: "Error: OpenAI returned an unexpected response." });
+    }
+
+    const rawText = gptData.choices[0].message.content;
+    console.log("Raw OpenAI Response:", rawText);
+
+    const mealPlanIndex = rawText.indexOf("### Meal Plan");
+    const groceryListIndex = rawText.indexOf("### Grocery List");
+
+    let mealPlanText = "Meal plan not found.";
+    let groceryListText = "Grocery list not found.";
+
+    if (mealPlanIndex !== -1 && groceryListIndex !== -1) {
+      mealPlanText = rawText.substring(mealPlanIndex, groceryListIndex).trim();
+      groceryListText = rawText.substring(groceryListIndex).replace("### Grocery List", "").trim();
+    } else {
+      console.error("Error: Could not properly separate meal plan and grocery list.");
+    }
+
+    res.json({ mealPlan: mealPlanText, groceryList: groceryListText });
+
+  } catch (error) {
+    console.error("Server Error:", error);
+    res.status(500).json({ reply: "Server error: Unable to process request." });
+  }
 });
 
+// ✅ Ensure server runs on correct port
 const PORT = process.env.PORT || 5002;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

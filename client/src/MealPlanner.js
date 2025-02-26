@@ -10,11 +10,12 @@ const MealPlanner = () => {
   const [mealPlan, setMealPlan] = useState(null);
   const [groceryList, setGroceryList] = useState(null);
   const [loading, setLoading] = useState(false);
+  const API_URL = "https://mealplanner-api-yljs.onrender.com"; 
 
  const handleSubmit = async () => {
   setLoading(true);
   try {
-    const res = await fetch("https://mealplanner-api-yljs.onrender.com", {
+     const res = await fetch(API_URL, { 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
