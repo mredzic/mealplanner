@@ -10,7 +10,7 @@ const app = express();
 // ✅ FIX: Update CORS to allow requests from your frontend
 app.use(
   cors({
-    origin: "https://mealplanner-silk.vercel.app", // ✅ Allow frontend access
+    origin: ["https://mealplanner-silk.vercel.app", "https://mealplanner-git-main-merimas-projects.vercel.app"], // ✅ Allow both URLs
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
