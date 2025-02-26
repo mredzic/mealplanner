@@ -8,7 +8,11 @@ dotenv.config(); // ✅ Loads environment variables
 const app = express();
 
 // ✅ Allow frontend access (update CORS for production)
-app.use(cors({ origin: "*", methods: "GET,POST" }));
+app.use(cors({
+  origin: "https://mealplanner-silk.vercel.app/", // Allows any origin (for testing)
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+}));
 
 app.use(express.json());
 
