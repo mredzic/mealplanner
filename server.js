@@ -10,7 +10,7 @@ const app = express();
 // ✅ FIX: Update CORS to allow requests from your frontend
 app.use(
   cors({
-    origin: "*", // ✅ Temporary fix, change later for security
+    origin: "*", // Temporary: Allow all origins
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
