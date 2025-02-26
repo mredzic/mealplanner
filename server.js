@@ -53,6 +53,7 @@ app.post("/api/mealplan", async (req, res) => {
     });
 
     const gptData = await gptResponse.json();
+      console.log("Full OpenAI Response:", gptData);
     if (gptData.error) {
       return res.status(500).json({ reply: `OpenAI Error: ${gptData.error.message}` });
     }
