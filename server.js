@@ -8,11 +8,16 @@ dotenv.config(); // ✅ Loads environment variables
 const app = express();
 
 // ✅ Allow frontend access (update CORS for production)
-app.use(cors({
-  origin: "https://mealplanner-silk.vercel.app/", // Allows any origin (for testing)
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-}));
+import cors from "cors";
+
+app.use(
+  cors({
+    origin: "*",  // This allows requests from any origin (mobile, desktop, etc.)
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: ["Content-Type", "Authorization"], // Ensure headers are allowed
+    credentials: false, // Set to false if you don't need cookies/auth sessions
+  })
+);
 
 app.use(express.json());
 
@@ -21,11 +26,17 @@ app.get("/", (req, res) => {
   res.send("Meal Planner API is running!");
 });
 
+app.use((req, res, next) => {
+  console.log("Request received from:", req.headers["user-agent"]);
+  next();
+});
+
 // ✅ Meal Plan API Route
 app.post("/api/mealplan", async (req, res) => {
   const { diet, allergies, mealTypes, cookingTime, ingredients } = req.body;
 
   try {
+
     const gptResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
