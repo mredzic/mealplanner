@@ -28,7 +28,7 @@ app.post("/api/mealplan", async (req, res) => {
   const { diet, allergies, mealTypes, cookingTime, ingredients } = req.body;
 
   try { 
-   const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
 console.log("Using OpenAI API Key:", apiKey);  // ✅ Debugging key being used
 
 const gptResponse = await fetch("https://api.openai.com/v1/chat/completions", {
