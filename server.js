@@ -7,9 +7,7 @@ dotenv.config(); // ✅ Loads environment variables
 
 const app = express();
 
-// ✅ Allow frontend access (update CORS for production)
-import cors from "cors";
-
+// ✅ Allow frontend acc
 app.use(
   cors({
     origin: "*",  // This allows requests from any origin (mobile, desktop, etc.)
