@@ -24,6 +24,8 @@ app.get("/", (req, res) => {
 
 // ✅ Ensure this is properly set for your API route
 app.post("/api/mealplan", async (req, res) => {
+  res.json({ message: "Meal plan API is working!" });
+});
   const { diet, allergies, mealTypes, cookingTime, ingredients } = req.body;
 
   try {
