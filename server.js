@@ -27,22 +27,25 @@ app.get("/", (req, res) => {
 app.post("/api/mealplan", async (req, res) => {
   const { diet, allergies, mealTypes, cookingTime, ingredients } = req.body;
 
-  try {
-    const gptResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
+  try { 
+   const apiKey = process.env.OPENAI_API_KEY;
+console.log("Using OpenAI API Key:", apiKey);  // ✅ Debugging key being used
+
+const gptResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
+        "Authorization": `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
         model: "gpt-4o",
         messages: [
-          { role: "system", content: "You are a meal planning assistant. Generate a structured weekly meal plan with a separate grocery list." },
-          { role: "user", content: `Diet: ${diet}, Allergies: ${allergies}, Meal Types: ${mealTypes}, Cooking Time: ${cookingTime}, Ingredients: ${ingredients}.` },
+            { role: "system", content: "You are a meal planning assistant..." },
+            { role: "user", content: `Diet: ${diet}, Allergies: ${allergies}, Meal Types: ${mealTypes}, Cooking Time: ${cookingTime}, Ingredients: ${ingredients}.` },
         ],
         max_tokens: 700,
-      }),
-    });
+    }),
+});
 
     const gptData = await gptResponse.json();
 
@@ -57,19 +60,26 @@ app.post("/api/mealplan", async (req, res) => {
     }
 
     const rawText = gptData.choices[0].message.content;
-    console.log("Raw OpenAI Response:", rawText);
+    console.log("📝 Raw OpenAI Response:", rawText); // ✅ Debugging log
 
-    const mealPlanIndex = rawText.indexOf("### Meal Plan");
-    const groceryListIndex = rawText.indexOf("### Grocery List");
+    const mealPlanIndex = rawText.indexOf("### Weekly Meal Plan");
+const groceryListIndex = rawText.indexOf("### Grocery List");
 
-    let mealPlanText = "Meal plan not found.";
-    let groceryListText = "Grocery list not found.";
+let mealPlanText = "Meal plan not found.";
+let groceryListText = "Grocery list not found.";
+
+if (mealPlanIndex !== -1 && groceryListIndex !== -1) {
+    mealPlanText = rawText.substring(mealPlanIndex, groceryListIndex).replace("### Weekly Meal Plan", "").trim();
+    groceryListText = rawText.substring(groceryListIndex).replace("### Grocery List", "").trim();
+} else {
+    console.error("Error: Could not properly separate meal plan and grocery list.");
+}
 
     if (mealPlanIndex !== -1 && groceryListIndex !== -1) {
-      mealPlanText = rawText.substring(mealPlanIndex, groceryListIndex).trim();
-      groceryListText = rawText.substring(groceryListIndex).replace("### Grocery List", "").trim();
+        mealPlanText = rawText.substring(mealPlanIndex, groceryListIndex).trim();
+        groceryListText = rawText.substring(groceryListIndex).replace("### Grocery List", "").trim();
     } else {
-      console.error("Error: Could not properly separate meal plan and grocery list.");
+        console.error("🚨 Error: Could not properly separate meal plan and grocery list.");
     }
 
     res.json({ mealPlan: mealPlanText, groceryList: groceryListText });
