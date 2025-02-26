@@ -10,7 +10,7 @@ const app = express();
 
 // ✅ FIX CORS: Allow your deployed frontend URL
 app.use(cors({
-    origin: ["https://mealplanner-silk.vercel.app"], // ✅ Add your frontend URL here
+    origin: ["https://mealplanner-api-yljs.onrender.com"], // ✅ Add your frontend URL here
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
