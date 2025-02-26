@@ -9,8 +9,18 @@ const app = express();
 
 // ✅ Apply Middleware (CORS & JSON Parsing)
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000" })); // Allow frontend access
+const cors = require("cors");
 
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000", 
+      "https://mealplanner-ibj5vochy-merimas-projects.vercel.app"
+    ], // ✅ Allow local & Vercel
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
 // ✅ Test Route to Confirm Server is Running
 app.get("/", (req, res) => {
     res.send("Server is running!");
