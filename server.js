@@ -9,7 +9,6 @@ const app = express();
 
 // ✅ Apply Middleware (CORS & JSON Parsing)
 app.use(express.json());
-const cors = require("cors");
 
 app.use(
   cors({
