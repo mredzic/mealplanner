@@ -10,7 +10,7 @@ const MealPlanner = () => {
   const [mealPlan, setMealPlan] = useState(null);
   const [groceryList, setGroceryList] = useState(null);
   const [loading, setLoading] = useState(false);
-  const API_URL = "https://mealplanner-api-yljs.onrender.com"; 
+  const API_URL = "https://mealplanner-silk.vercel.app/"; 
 
  const handleSubmit = async () => {
   setLoading(true);
