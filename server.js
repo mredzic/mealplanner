@@ -8,16 +8,17 @@ dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
 const app = express();
 
-// ✅ Fix CORS: Allow requests from frontend (Update the deployed frontend URL)
+// ✅ FIX CORS: Allow your deployed frontend URL
 app.use(cors({
-    origin: ["http://localhost:3000", "https://mealplanner-git-main-merimas-projects.vercel.app"], // ✅ Update with your frontend URL
+    origin: ["https://mealplanner-silk.vercel.app"], // ✅ Add your frontend URL here
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
-app.use(express.json()); // ✅ Enable JSON parsing
+app.use(express.json());
 
-// ✅ Test Route: Make sure API is running
+// ✅ Test Route
 app.get("/", (req, res) => {
     res.send("Meal Planner API is running!");
 });
