@@ -10,7 +10,7 @@ const app = express();
 // ✅ Allow frontend acc
 app.use(
   cors({
-    origin: "*",  // This allows requests from any origin (mobile, desktop, etc.)
+    origin: ["https://mealplanner-7ejki14l3-merimas-projects.vercel.app"], // Add your deployed frontend URL here
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"], // Ensure headers are allowed
     credentials: false, // Set to false if you don't need cookies/auth sessions
