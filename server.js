@@ -13,7 +13,7 @@ app.use(
     origin: ["https://mealplanner-7ejki14l3-merimas-projects.vercel.app"], // Add your deployed frontend URL here
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"], // Ensure headers are allowed
-    credentials: true, // Allow credentials (cookies, tokens, etc.)
+    credentials: false, // Set to false if you don't need cookies/auth sessions
   })
 );
 
