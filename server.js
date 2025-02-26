@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 
 // ✅ FIX: Update CORS to allow requests from your frontend
-aapp.use(
+app.use(
   cors({
     origin: "*", // ✅ Temporary fix, change later for security
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
