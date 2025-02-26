@@ -10,7 +10,7 @@ const app = express();
 // ✅ CORS: Allow your frontend to access the backend
 app.use(
   cors({
-    origin: ["https://mealplanner-silk.vercel.app", "https://mealplanner-git-main-merimas-projects.vercel.app"],
+    origin: "*",  // 🚀 Temporarily allow ALL origins (for debugging)
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
