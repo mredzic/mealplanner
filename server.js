@@ -1,31 +1,28 @@
 import express from "express";
-import cors from "cors";  // ✅ Import CORS once
+import cors from "cors";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const apiKey = process.env.OPENAI_API_KEY;
 const app = express();
 
-// ✅ Apply Middleware (CORS & JSON Parsing)
-app.use(express.json());
-
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000", 
-      "https://mealplanner-ibj5vochy-merimas-projects.vercel.app"
-    ], // ✅ Allow local & Vercel
+// ✅ Fix CORS: Allow requests from frontend (Update the deployed frontend URL)
+app.use(cors({
+    origin: ["http://localhost:3000", "https://mealplanner-git-main-merimas-projects.vercel.app"], // ✅ Update with your frontend URL
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
-  })
-);
-// ✅ Test Route to Confirm Server is Running
+}));
+
+app.use(express.json()); // ✅ Enable JSON parsing
+
+// ✅ Test Route: Make sure API is running
 app.get("/", (req, res) => {
-    res.send("Server is running!");
+    res.send("Meal Planner API is running!");
 });
 
-// ✅ Chatbot API Route (POST Request)
+// ✅ Meal Plan Route
 app.post("/api/mealplan", async (req, res) => {
     const { diet, allergies, mealTypes, cookingTime, ingredients } = req.body;
 
@@ -34,7 +31,8 @@ app.post("/api/mealplan", async (req, res) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`            },
+                "Authorization": `Bearer ${apiKey}`,
+            },
             body: JSON.stringify({
                 model: "gpt-4o",
                 messages: [
@@ -50,7 +48,7 @@ app.post("/api/mealplan", async (req, res) => {
                         content: `Diet: ${diet}, Allergies: ${allergies}, Meal Types: ${mealTypes}, Cooking Time: ${cookingTime}, Ingredients: ${ingredients}.`
                     },
                 ],
-                max_tokens: 700, // ✅ Ensure enough tokens for a full response
+                max_tokens: 700,
             }),
         });
 
@@ -67,7 +65,7 @@ app.post("/api/mealplan", async (req, res) => {
         }
 
         const rawText = gptData.choices[0].message.content;
-        console.log("Raw OpenAI Response:", rawText); // ✅ Log raw output
+        console.log("Raw OpenAI Response:", rawText);
 
         // ✅ Extract meal plan and grocery list
         const mealPlanIndex = rawText.indexOf("### Meal Plan");
@@ -93,6 +91,7 @@ app.post("/api/mealplan", async (req, res) => {
         res.status(500).json({ reply: "Server error: Unable to process request." });
     }
 });
-// ✅ Start Server on Port 5002
+
+// ✅ Start Server
 const PORT = process.env.PORT || 5002;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
