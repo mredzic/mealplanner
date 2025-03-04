@@ -1,13 +1,13 @@
 import React from "react";
-import MealPlanner from "./MealPlanner"; // Import MealPlanner component
+import MealPlanner from "./MealPlanner";
 
-const App = () => {
+function App() {
   return (
-    <div className="container">
+    <div>
       <h1>Meal Planner</h1>
-      <MealPlanner /> {/* Use the component instead of hardcoding fields */}
+      <MealPlanner />
     </div>
   );
-};
+}
 
 export default App;

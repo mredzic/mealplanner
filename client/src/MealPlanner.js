@@ -1,10 +1,6 @@
 import { useState } from "react";
-import { FaUtensils, FaCoffee, FaHamburger, FaAppleAlt } from "react-icons/fa"; // Import icons
 
 const MealPlanner = () => {
-  useEffect(() => {
-  console.log("MealPlanner component is rendering!");
-}, []);
   const [diet, setDiet] = useState("");
   const [allergies, setAllergies] = useState([]);
   const [mealTypes, setMealTypes] = useState([]);
@@ -75,17 +71,10 @@ const MealPlanner = () => {
   }
 };
 
-  return (
-  <div className="container">
-    <h2>Meal Planner</h2>
-
+ return (
     <div>
       <label>Diet Preference:</label>
-      <select
-        value={diet}
-        onChange={(e) => setDiet(e.target.value)}
-        style={{ border: "1px solid #ccc", borderRadius: "5px", padding: "8px", width: "100%" }}
-        >
+      <select value={diet} onChange={(e) => setDiet(e.target.value)}>
         <option value="">Select...</option>
         <option value="Vegetarian">Vegetarian</option>
         <option value="Vegan">Vegan</option>
