@@ -2,6 +2,9 @@ import { useState } from "react";
 import { FaUtensils, FaCoffee, FaHamburger, FaAppleAlt } from "react-icons/fa"; // Import icons
 
 const MealPlanner = () => {
+  useEffect(() => {
+  console.log("MealPlanner component is rendering!");
+}, []);
   const [diet, setDiet] = useState("");
   const [allergies, setAllergies] = useState([]);
   const [mealTypes, setMealTypes] = useState([]);
