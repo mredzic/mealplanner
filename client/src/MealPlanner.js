@@ -72,6 +72,7 @@ const MealPlanner = () => {
 };
 
  return (
+  <div>
     <div>
       <label>Diet Preference:</label>
       <select value={diet} onChange={(e) => setDiet(e.target.value)}>
