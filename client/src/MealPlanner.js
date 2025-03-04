@@ -78,7 +78,11 @@ const MealPlanner = () => {
 
     <div>
       <label>Diet Preference:</label>
-      <select value={diet} onChange={(e) => setDiet(e.target.value)}>
+      <select
+        value={diet}
+        onChange={(e) => setDiet(e.target.value)}
+        style={{ border: "1px solid #ccc", borderRadius: "5px", padding: "8px", width: "100%" }}
+        >
         <option value="">Select...</option>
         <option value="Vegetarian">Vegetarian</option>
         <option value="Vegan">Vegan</option>
