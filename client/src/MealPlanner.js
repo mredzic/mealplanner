@@ -11,36 +11,43 @@ const MealPlanner = () => {
   const [loading, setLoading] = useState(false);
   const [customAllergy, setCustomAllergy] = useState("");
 
-  const API_URL = "https://mealplanner-silk.vercel.app/";
+const API_URL = "https://mealplanner-api-yljs.onrender.com/api/mealplan";
 
   const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          diet,
-          allergies: customAllergy ? [...allergies, customAllergy] : allergies,
-          mealTypes,
-          cookingTime,
-          ingredients,
-        }),
-      });
+  setLoading(true);
+  try {
+    console.log("Sending request to:", API_URL);
+    
+    const res = await fetch(API_URL, { 
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        diet,
+        allergies,
+        mealTypes,
+        cookingTime,
+        ingredients,
+      }),
+    });
 
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    console.log("Response status:", res.status);
 
-      const data = await res.json();
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
 
-      setMealPlan(data.mealPlan || "No meal plan available.");
-      setGroceryList(data.groceryList || []);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Failed to fetch meal plan. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    const data = await res.json();
+
+    console.log("Response data:", data);
+
+    setMealPlan(data.mealPlan);
+    setGroceryList(data.groceryList);
+
+  } catch (error) {
+    console.error("Error fetching meal plan:", error);
+    alert("Failed to fetch meal plan. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
