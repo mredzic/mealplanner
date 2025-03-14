@@ -43,8 +43,9 @@ const MealPlanner = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-8 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-bold text-center mb-8">Meal Planner</h2>
+   return (
+    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
+     <h2 className="text-2xl font-bold text-center mb-8">Meal Planner</h2>
 <div className="form-container">
   {/* Diet Preference */}
   <div>
